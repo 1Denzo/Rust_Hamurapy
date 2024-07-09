@@ -148,6 +148,9 @@ fn main() {
     let mut game_state = GameState::new();
 
     loop {
+        if game_state.year > 10 {
+            println!("Game Over!");
+            break; };
         game_state.print_status();
         println!("Выберите действие:");
         println!("1. Купить землю");
@@ -155,7 +158,7 @@ fn main() {
         println!("3. Раздать людям зерно для еды");
         println!("4. Засеять землю");
         println!("5. Следующий год");
-        let ten_millis = time::Duration::from_millis(500);
+        let ten_millis = time::Duration::from_millis(5000);
         let now = time::Instant::now();
         thread::sleep(ten_millis);
         assert!(now.elapsed() >= ten_millis);
