@@ -123,16 +123,20 @@ impl GameState {
         }
 
     fn handle_year_end(&mut self) {
-        self.productivity = rand::thread_rng().gen_range(1..=10);
+        self.productivity = rand::thread_rng().gen_range(5..=20);
         self.grain_yield = self.acres_to_sow * self.productivity; // каждый акр дает 1-10 единиц зерна
         self.bushels += self.grain_yield;
         self.immigrants = self.productivity * (20 * self.acres + self.bushels) / self.population / 100 + 1;
         self.peaple_with_full_tummi = self.bushels_for_food / 20;
         if self.population > self.peaple_with_full_tummi {
             self.starvision_die = self.population - self.peaple_with_full_tummi;
-        } else { self.starvision_die = 0; }
+            self.immigrants = 0;
+        } else {
+            self.starvision_die = 0;
+            self.immigrants = self.productivity * (20 * self.acres + self.bushels) / self.population / 100 + 1;
+        };
         self.population = self.population + self.immigrants - self.starvision_die;
-        self.cost_per_acre = self.productivity * 4;
+        self.cost_per_acre = self.productivity * 3;
         self.grain_yield = 0;
         self.acres_to_sow = 0;
         self.bushels_for_food = 0;
@@ -148,7 +152,7 @@ fn main() {
     let mut game_state = GameState::new();
 
     loop {
-        if game_state.year > 10 {
+        if game_state.year > 10 || game_state.population == 0 {
             println!("Game Over!");
             break; };
         game_state.print_status();
